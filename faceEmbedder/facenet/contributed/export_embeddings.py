@@ -122,10 +122,10 @@ def main(args):
             #   export emedings and labels
             label_list  = np.array(label_list)
 
-            np.save(args.embeddings_name, emb_array)
-            np.save(args.labels_name, label_list)
+            np.save(os.path.join(args.outputfolder, args.embeddings_name), emb_array)
+            np.save(os.path.join(args.outputfolder, args.labels_name), label_list)
             label_strings = np.array(label_strings)
-            np.save(args.labels_strings_name, label_strings[label_list])
+            np.save(os.path.join(args.outputfolder, args.labels_strings_name), label_strings[label_list])
 
 
 def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
@@ -147,17 +147,23 @@ def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
         print(image_paths[i])
         img = misc.imread(os.path.expanduser(image_paths[i]))
         img_size = np.asarray(img.shape)[0:2]
-        bounding_boxes, _ = align.detect_face.detect_face(img, minsize, pnet, rnet, onet, threshold, factor)
-        det = np.squeeze(bounding_boxes[0,0:4])
-        bb = np.zeros(4, dtype=np.int32)
-        bb[0] = np.maximum(det[0]-margin/2, 0)
-        bb[1] = np.maximum(det[1]-margin/2, 0)
-        bb[2] = np.minimum(det[2]+margin/2, img_size[1])
-        bb[3] = np.minimum(det[3]+margin/2, img_size[0])
-        cropped = img[bb[1]:bb[3],bb[0]:bb[2],:]
-        aligned = misc.imresize(cropped, (image_size, image_size), interp='bilinear')
-        prewhitened = facenet.prewhiten(aligned)
-        img_list[i] = prewhitened
+        try:
+            bounding_boxes, _ = align.detect_face.detect_face(img, minsize, pnet, rnet, onet, threshold, factor)
+        except:
+            bounding_boxes = None
+        if bounding_boxes is not None and bounding_boxes.size:
+            det = np.squeeze(bounding_boxes[0,0:4])
+            bb = np.zeros(4, dtype=np.int32)
+            bb[0] = np.maximum(det[0]-margin/2, 0)
+            bb[1] = np.maximum(det[1]-margin/2, 0)
+            bb[2] = np.minimum(det[2]+margin/2, img_size[1])
+            bb[3] = np.minimum(det[3]+margin/2, img_size[0])
+            cropped = img[bb[1]:bb[3],bb[0]:bb[2],:]
+            aligned = misc.imresize(cropped, (image_size, image_size), interp='bilinear')
+            prewhitened = facenet.prewhiten(aligned)
+            img_list[i] = prewhitened
+        else:
+            img_list[i] = np.zeros((160, 160, 3))
     images = np.stack(img_list)
     return images
 
@@ -167,6 +173,8 @@ def parse_arguments(argv):
         help='Directory containing the meta_file and ckpt_file')
     parser.add_argument('data_dir', type=str,
         help='Directory containing images. If images are not already aligned and cropped include --is_aligned False.')
+    parser.add_argument('--outputfolder', type=str,
+                        help='Fodler to save ouput files..', default='.')
     parser.add_argument('--is_aligned', type=str,
         help='Is the data directory already aligned and cropped?', default=True)
     parser.add_argument('--image_size', type=int,

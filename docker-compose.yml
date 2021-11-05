@@ -1,0 +1,9 @@
+version: '3'
+services:
+
+  facescruncher:
+    build: faceEmbedder
+    volumes:
+      - ./putHereYourInputImages:/inputdata
+      - ./getHereYourResults:/output
+    command: python /workdir/contributed/export_embeddings.py --is_aligned False --outputfolder /output /VGGFace2-PretrainedModel/20180402-114759 /inputdata
