@@ -4,6 +4,6 @@ services:
   facescruncher:
     build: faceEmbedder
     volumes:
-      - ./putHereYourInputImages:/inputdata
+      - /path/to/your/inputdata:/inputdata/img_celeba
       - ./getHereYourResults:/output
     command: python /workdir/contributed/export_embeddings.py --is_aligned False --outputfolder /output /VGGFace2-PretrainedModel/20180402-114759 /inputdata
