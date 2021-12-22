@@ -68,7 +68,7 @@ def main(args):
     train_set = facenet.get_dataset(args.data_dir)
     image_list, label_list = facenet.get_image_paths_and_labels(train_set)
     image_list_files = [os.path.split(img)[1] for img in image_list]
-    np.save(os.path.join(args.outputfolder, 'image_list'), image_list_files)
+    np.save(os.path.join(args.outputfolder, 'image_list.npy'), image_list_files)
     # fetch the classes (labels as strings) exactly as it's done in get_dataset
     path_exp = os.path.expanduser(args.data_dir)
     classes = [path for path in os.listdir(path_exp) \
