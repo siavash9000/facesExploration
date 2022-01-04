@@ -3,7 +3,7 @@
 This repo experiments with the [FaceNet implementation](https://github.com/davidsandberg/facenet) from David Sandberg. 
 It includes a copy of the implementation and uses Docker for easy reproducibility.
 FaceNet is a neural network written in TensorFlow. It computes for a given Image a so-called embedding. 
-These embeddings a vectors of dimension 512, which encode the similarity of faces, meaning that faces which are similar 
+These embeddings are vectors of dimension 512 and encode the similarity of faces, meaning that faces which are similar 
 has a smaller euclidean distance than less similar faces. This property can be used for face recognition.
 
 # Getting started
