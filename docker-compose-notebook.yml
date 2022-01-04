@@ -1,0 +1,11 @@
+version: '3'
+services:
+
+  facescruncher:
+    build: faceEmbedder
+    volumes:
+      - .:/workdir
+    working_dir: /workdir
+    ports:
+      - 8888:8888
+    command: jupyter notebook --allow-root
