@@ -6,6 +6,8 @@ FaceNet is a neural network written in TensorFlow. It computes for a given Image
 These embeddings are vectors of dimension 512 and encode the similarity of faces, meaning that faces which are similar 
 has a smaller euclidean distance than less similar faces. This property can be used for face recognition.
 
+If you want to see the results, check out this [notebook](https://github.com/codeshiprepeat/facesExploration/blob/main/celebAExploration.ipynb)
+
 # Getting started
 
 ## Prerequisites
